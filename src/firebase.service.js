@@ -33,8 +33,8 @@ function firebase(){
     console.log("Firebase constructor");
 }
 
-firebase.prototype.initPresence = function(serverName) {
-    initPresence(serverName);
+firebase.prototype.initService = function(serverName) {
+    initService(serverName);
 }
 
 firebase.prototype.setPresence = function(serviceAccount, databaseUrl) {
