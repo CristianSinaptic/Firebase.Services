@@ -5,12 +5,19 @@ var admin = require("firebase-admin");
 var os = require('os');
 var osu = require('os-utils');
 
-function initService(serviceAccount, databaseUrl){
+function init(serviceAccount, databaseUrl, server, interval){
+    var serverName = server || "Unknown";
+    //START API
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         databaseURL: databaseUrl
       });
-      
+    
+    // SET PRESENCE  
+    setPresence (serverName)
+    
+    // START METRICS TIMER
+    setInterval(setMetrics, interval || 6000);
 }
 
 function setPresence (serverName){
@@ -33,17 +40,8 @@ function firebase(){
     console.log("Firebase constructor");
 }
 
-firebase.prototype.initService = function(serviceAccount, databaseUrl) {
-    initService(serviceAccount, databaseUrl);
-}
-
-firebase.prototype.setPresence = function(serverName) {
-    setPresence(serverName);
-}
-
-
-firebase.prototype.setMetrics = function(serverName) {
-    setMetrics(serverName);
+firebase.prototype.init = function(serviceAccount, databaseUrl, serverName, interval) {
+    init(serviceAccount, databaseUrl);
 }
 
 module.exports = firebase;
