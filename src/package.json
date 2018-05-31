@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/CristianSinaptic/Firebase.Services/issues"
   },
-  "homepage": "https://github.com/CristianSinaptic/Firebase.Services#readme"
+  "homepage": "https://github.com/CristianSinaptic/Firebase.Services#readme",
+  "dependencies": {
+    "firebase-admin": "^5.12.1"
+  }
 }
