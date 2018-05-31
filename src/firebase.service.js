@@ -41,7 +41,7 @@ function firebase(){
 }
 
 firebase.prototype.init = function(serviceAccount, databaseUrl, serverName, interval) {
-    init(serviceAccount, databaseUrl);
+    init(serviceAccount, databaseUrl, serverName, interval);
 }
 
 module.exports = firebase;
