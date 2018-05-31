@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/CristianSinaptic/Firebase.Services#readme",
   "dependencies": {
-    "firebase-admin": "^5.12.1"
+    "firebase-admin": "^5.12.1",
+    "os-utils": "0.0.14"
   }
 }
