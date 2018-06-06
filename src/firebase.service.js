@@ -7,12 +7,10 @@ var osu = require('os-utils');
 const caw = require("caw");
 const https = require("https");
  
-// Your Proxy
-const firebaseAgent;
 var serverName = "";
 
 function init(serviceAccount, databaseUrl, server, interval, proxyUrl){
-    firebaseAgent = caw(proxyUrl, {
+    var firebaseAgent = caw(proxyUrl, {
       protocol: "https",
     });
     serverName = server || "Unknown";
