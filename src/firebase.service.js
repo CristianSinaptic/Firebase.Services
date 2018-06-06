@@ -4,14 +4,23 @@
 var admin = require("firebase-admin");
 var os = require('os');
 var osu = require('os-utils');
+const caw = require("caw");
+const https = require("https");
+ 
+// Your Proxy
+const firebaseAgent;
 var serverName = "";
 
-function init(serviceAccount, databaseUrl, server, interval){
+function init(serviceAccount, databaseUrl, server, interval, proxyUrl){
+    firebaseAgent = caw(proxyUrl, {
+      protocol: "https",
+    });
     serverName = server || "Unknown";
     //START API
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
-        databaseURL: databaseUrl
+        databaseURL: databaseUrl,
+        agent: firebaseAgent
       });
     
     // SET PRESENCE  
@@ -41,8 +50,8 @@ function firebase(){
     console.log("Firebase constructor");
 }
 
-firebase.prototype.init = function(serviceAccount, databaseUrl, serverName, interval) {
-    init(serviceAccount, databaseUrl, serverName, interval);
+firebase.prototype.init = function(serviceAccount, databaseUrl, serverName, interval, proxyUrl) {
+    init(serviceAccount, databaseUrl, serverName, interval, proxyUrl);
 }
 
 module.exports = firebase;
