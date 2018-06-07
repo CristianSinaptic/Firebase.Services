@@ -6,10 +6,11 @@ var os = require('os');
 var osu = require('os-utils');
 const caw = require("caw");
 const https = require("https");
- 
+
+var db = null;
 var serverName = "";
 
-function init(serviceAccount, databaseUrl, server, interval, proxyUrl){
+function init(serviceAccount, databaseUrl, server, interval, proxyUrl, sendMetrics){
     var firebaseAgent = caw(proxyUrl, {
       protocol: "https",
     });
@@ -18,22 +19,27 @@ function init(serviceAccount, databaseUrl, server, interval, proxyUrl){
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         databaseURL: databaseUrl,
-        agent: firebaseAgent
+        agent: firebaseAgent,
+        logging_enabled: true
       });
-    
+    db =  admin.database();
     // SET PRESENCE  
-    setPresence()
-    
+    setServerStatus('online');
+    setOnDisconnect()
     // START METRICS TIMER
-    setInterval(setMetrics, interval || 6000);
+    if(sendMetrics)
+        setInterval(setMetrics, interval || 6000);
 }
 
-function setPresence (){
-    var db = admin.database();
-    db.ref('serverStatus/' + serverName).set({status:'online'});
-    console.log("initPresence - OK");
+function setOnDisconnect(){
+    db.ref('serverStatus/' + serverName).onDisconnect().set({status:'offline'});
+    console.log("onDisconnect() - OK");
 }
 
+function setServerStatus(stat){
+    db.ref('serverStatus/' + serverName).set({status:stat});
+    console.log("Presence setted to: " + stat);
+}
 
 function setMetrics(){
     osu.cpuUsage(function(cpu){
@@ -48,8 +54,8 @@ function firebase(){
     console.log("Firebase constructor");
 }
 
-firebase.prototype.init = function(serviceAccount, databaseUrl, serverName, interval, proxyUrl) {
-    init(serviceAccount, databaseUrl, serverName, interval, proxyUrl);
+firebase.prototype.init = function(serviceAccount, databaseUrl, serverName, interval, proxyUrl, sendMetrics) {
+    init(serviceAccount, databaseUrl, serverName, interval, proxyUrl, sendMetrics);
 }
 
 module.exports = firebase;
